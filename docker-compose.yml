@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # NATS Message Broker
+  nats:
+    image: nats:2.10-alpine
+    container_name: videoflow-nats
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    networks:
+      - videoflow-net
+
+  # API Gateway
+  gateway:
+    build:
+      context: ./gateway
+      dockerfile: Dockerfile
+    container_name: videoflow-gateway
+    ports:
+      - "9898:8080"
+    environment:
+      - NATS_URL=nats://nats:4222
+      - PORT=8080
+    depends_on:
+      - nats
+    networks:
+      - videoflow-net
+
+  # Stream Ingestion Service
+  stream-service:
+    build:
+      context: ./stream-service
+      dockerfile: Dockerfile
+    container_name: videoflow-stream-service
+    environment:
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      - nats
+    networks:
+      - videoflow-net
+
+  # Inference Worker (Python AI Service)
+  inference-worker:
+    build:
+      context: .
+      dockerfile: inference-worker/Dockerfile
+    container_name: videoflow-inference-worker
+    environment:
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      - nats
+    networks:
+      - videoflow-net
+
+  # Workflow Engine / Rule Service
+  workflow-service:
+    build:
+      context: ./workflow-service
+      dockerfile: Dockerfile
+    container_name: videoflow-workflow-service
+    environment:
+      - NATS_URL=nats://nats:4222
+    depends_on:
+      - nats
+    networks:
+      - videoflow-net
+
+  # React Frontend Dashboard
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: videoflow-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - gateway
+    networks:
+      - videoflow-net
+
+networks:
+  videoflow-net:
+    driver: bridge
