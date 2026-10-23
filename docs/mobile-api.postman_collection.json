@@ -1,0 +1,2694 @@
+{
+  "info": {
+    "name": "黄村乡防溺水 · 移动端与现有业务 API",
+    "description": "先设置baseUrl、username、password并执行登录。新增风险任务使用mobile前缀。写请求应选择实际测试记录后按需执行。完整字段、媒体签名和错误语义见mobile-api.md及OpenAPI。",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://192.168.0.111:8080"
+    },
+    {
+      "key": "username",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "taskId",
+      "value": "1"
+    },
+    {
+      "key": "id",
+      "value": "1"
+    },
+    {
+      "key": "deviceId",
+      "value": "1"
+    },
+    {
+      "key": "expectedStatus",
+      "value": "PENDING"
+    },
+    {
+      "key": "snapshotUrl",
+      "value": ""
+    },
+    {
+      "key": "videoUrl",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "01 新增移动端风险任务",
+      "item": [
+        {
+          "name": "GET /api/v1/mobile/risk-tasks · 分页查询风险任务",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks?pageNum=1&pageSize=12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "12",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "PENDING",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "deviceCode",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "startTime",
+                  "value": "",
+                  "disabled": true,
+                  "description": "北京时间，yyyy-MM-dd HH:mm:ss（含起点）"
+                },
+                {
+                  "key": "endTime",
+                  "value": "",
+                  "disabled": true,
+                  "description": "北京时间，yyyy-MM-dd HH:mm:ss（含终点）"
+                }
+              ]
+            },
+            "description": "支持状态、设备编码、关键词和告警时间筛选；counts为全量统计\n权限：hasAuthority('task:read')"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json(); const t = r.data?.records?.[0]; if (t) { pm.collectionVariables.set(\"taskId\", String(t.id)); pm.collectionVariables.set(\"expectedStatus\", t.status); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/stats · 获取风险任务全量状态统计",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "stats"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/{id} · 获取单个风险任务详情（含处理历史）",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/{id}/history · 获取任务完整处理历史",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}",
+                "history"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/{id}/media-links · 获取5分钟有效的截图/视频链接",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}/media-links",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}",
+                "media-links"
+              ],
+              "query": []
+            },
+            "description": "先使用Bearer令牌获取链接，再交给不支持自定义请求头的移动端媒体组件\n权限：hasAuthority('task:read')"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json(); if (r.code === 200) { pm.collectionVariables.set(\"snapshotUrl\", r.data.snapshotUrl || \"\"); pm.collectionVariables.set(\"videoUrl\", r.data.videoUrl || \"\"); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/{id}/snapshot · 读取告警带框截图",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Range",
+                "value": "bytes=0-1023",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}/snapshot",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}",
+                "snapshot"
+              ],
+              "query": [
+                {
+                  "key": "access",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "download",
+                  "value": "false",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Bearer鉴权或media-links中的access；返回JPEG二进制，可使用download=true下载\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "POST /api/v1/mobile/risk-tasks/{id}/status · 标注已处理或识别错误",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "description": "expectedStatus传入页面读取的原状态；并发状态冲突返回HTTP 409\n权限：hasAnyAuthority('task:update', 'alert:confirm')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PROCESSED\",\n  \"expectedStatus\": \"{{expectedStatus}}\",\n  \"note\": \"已现场核验\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/mobile/risk-tasks/{id}/video · 播放或下载告警视频",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Range",
+                "value": "bytes=0-1023",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/mobile/risk-tasks/{{taskId}}/video",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "mobile",
+                "risk-tasks",
+                "{{taskId}}",
+                "video"
+              ],
+              "query": [
+                {
+                  "key": "access",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "download",
+                  "value": "false",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "返回H.264 MP4二进制，支持单段Range；录制中返回409，归档后可回放\n权限：登录；未另设方法权限"
+          }
+        }
+      ]
+    },
+    {
+      "name": "02 不带Bearer的短时媒体链接（先获取media-links）",
+      "item": [
+        {
+          "name": "读取短时截图链接",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}{{snapshotUrl}}"
+          }
+        },
+        {
+          "name": "读取短时视频链接",
+          "request": {
+            "method": "GET",
+            "auth": {
+              "type": "noauth"
+            },
+            "url": "{{baseUrl}}{{videoUrl}}"
+          }
+        }
+      ]
+    },
+    {
+      "name": "AI风险任务（移动端与大屏）",
+      "item": [
+        {
+          "name": "GET /api/v1/risk-tasks · 分页查询风险任务",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks?pageNum=1&pageSize=12",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "12",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "PENDING",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "deviceCode",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "startTime",
+                  "value": "",
+                  "disabled": true,
+                  "description": "北京时间，yyyy-MM-dd HH:mm:ss（含起点）"
+                },
+                {
+                  "key": "endTime",
+                  "value": "",
+                  "disabled": true,
+                  "description": "北京时间，yyyy-MM-dd HH:mm:ss（含终点）"
+                }
+              ]
+            },
+            "description": "支持状态、设备编码、关键词和告警时间筛选；counts为全量统计\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/stats · 获取风险任务全量状态统计",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/stats",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "stats"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/{id} · 获取单个风险任务详情（含处理历史）",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/{id}/history · 获取任务完整处理历史",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}/history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}",
+                "history"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/{id}/media-links · 获取5分钟有效的截图/视频链接",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}/media-links",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}",
+                "media-links"
+              ],
+              "query": []
+            },
+            "description": "先使用Bearer令牌获取链接，再交给不支持自定义请求头的移动端媒体组件\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/{id}/snapshot · 读取告警带框截图",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Range",
+                "value": "bytes=0-1023",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}/snapshot",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}",
+                "snapshot"
+              ],
+              "query": [
+                {
+                  "key": "access",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "download",
+                  "value": "false",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "Bearer鉴权或media-links中的access；返回JPEG二进制，可使用download=true下载\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "POST /api/v1/risk-tasks/{id}/status · 标注已处理或识别错误",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}/status",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}",
+                "status"
+              ],
+              "query": []
+            },
+            "description": "expectedStatus传入页面读取的原状态；并发状态冲突返回HTTP 409\n权限：hasAnyAuthority('task:update', 'alert:confirm')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"status\": \"PROCESSED\",\n  \"expectedStatus\": \"{{expectedStatus}}\",\n  \"note\": \"已现场核验\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/risk-tasks/{id}/video · 播放或下载告警视频",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Range",
+                "value": "bytes=0-1023",
+                "disabled": true
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/risk-tasks/{{taskId}}/video",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "risk-tasks",
+                "{{taskId}}",
+                "video"
+              ],
+              "query": [
+                {
+                  "key": "access",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "download",
+                  "value": "false",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "返回H.264 MP4二进制，支持单段Range；录制中返回409，归档后可回放\n权限：登录；未另设方法权限"
+          }
+        }
+      ]
+    },
+    {
+      "name": "报警管理",
+      "item": [
+        {
+          "name": "GET /api/v1/alerts · 分页获取报警列表 (UC01)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "waterAreaId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "alertType",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('alert:read')"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/alerts/detection-history · 清空所有智能目标分析历史记录",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/detection-history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "detection-history"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:close')"
+          }
+        },
+        {
+          "name": "GET /api/v1/alerts/detection-history · 获取智能目标分析历史记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/detection-history",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "detection-history"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('alert:read')"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/alerts/detection-history/{id} · 删除单条智能目标分析历史记录",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/detection-history/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "detection-history",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:close')"
+          }
+        },
+        {
+          "name": "GET /api/v1/alerts/mobile/list · 移动端专享：获取告警事件列表 (支持待处理/已处理状态筛选)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/mobile/list?pageNum=1&pageSize=20",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "mobile",
+                "list"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "20",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "POST /api/v1/alerts/mobile/{id}/process · 移动端专享：标记告警事件为已处理",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/mobile/{{id}}/process",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "mobile",
+                "{{id}}",
+                "process"
+              ],
+              "query": [
+                {
+                  "key": "handler",
+                  "value": "MobileUser",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/alerts/recordings · 清空所有触发阈值抓拍录像记录及物理文件",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/recordings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "recordings"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:close')"
+          }
+        },
+        {
+          "name": "GET /api/v1/alerts/recordings · 获取阈值触发抓拍录像列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/recordings",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "recordings"
+              ],
+              "query": [
+                {
+                  "key": "streamId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "limit",
+                  "value": "100",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('alert:read')"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/alerts/recordings/{id} · 删除指定的录像文件及记录",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/recordings/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "recordings",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:close')"
+          }
+        },
+        {
+          "name": "POST /api/v1/alerts/trigger · 接收AI主动预警上报 (模拟/触发入口)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/trigger",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "trigger"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"eventNo\": \"\",\n  \"sourceDeviceId\": 0,\n  \"waterAreaId\": 0,\n  \"alertLocation\": \"\",\n  \"confidence\": 0,\n  \"alertType\": \"\",\n  \"status\": \"\",\n  \"snapshotUrl\": \"\",\n  \"videoClipUrl\": \"\",\n  \"confirmedBy\": 0,\n  \"confirmedAt\": \"\",\n  \"falseAlarmReason\": \"\",\n  \"resolvedAt\": \"\",\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"longitude\": 0,\n  \"latitude\": 0,\n  \"sourceDeviceName\": \"\",\n  \"waterAreaName\": \"\",\n  \"confirmedByName\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/v1/alerts/{id} · 逻辑删除报警事件记录",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:close')"
+          }
+        },
+        {
+          "name": "GET /api/v1/alerts/{id} · 获取报警详情 (UC01)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/alerts/{id}/confirm · 值守员人工确认报警 (UC02)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/{{id}}/confirm",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "{{id}}",
+                "confirm"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('alert:confirm')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"isReal\": false,\n  \"reason\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/alerts/{id}/status · 大屏任务中心：更新任务事件状态 (PENDING / PROCESSED / RECOGNITION_ERROR)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/alerts/{{id}}/status?status=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "alerts",
+                "{{id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        }
+      ]
+    },
+    {
+      "name": "救援任务管理",
+      "item": [
+        {
+          "name": "GET /api/v1/tasks · 分页获取任务列表 (UC11)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "assigneeId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "eventId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/dispatch · 手动指派/调度人员 (UC02 / UC09)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/dispatch?eventId=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "dispatch"
+              ],
+              "query": [
+                {
+                  "key": "eventId",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('task:dispatch')"
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/location · 上报实时定位 (UC12 / F-19)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/location",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "location"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:update')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"longitude\": 116.391,\n  \"latitude\": 39.907,\n  \"accuracy\": 5\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/tasks/{id} · 获取救援任务详情 (UC09)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/{id}/accept · 接收/接受任务 (UC09)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{id}}/accept",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "{{id}}",
+                "accept"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:update')"
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/{id}/arrive · 到达现场上报 (UC10)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{id}}/arrive",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "{{id}}",
+                "arrive"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:update')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"longitude\": 0,\n  \"latitude\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/{id}/complete · 完成救援任务 (UC10)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{id}}/complete",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "{{id}}",
+                "complete"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('task:update')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"resultType\": \"\",\n  \"note\": \"\",\n  \"photoUrls\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/tasks/{id}/status · 标注更新任务状态 (已处理 / 识别错误)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/tasks/{{id}}/status?status=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "tasks",
+                "{{id}}",
+                "status"
+              ],
+              "query": [
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "note",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('task:update')"
+          }
+        }
+      ]
+    },
+    {
+      "name": "无人机巡检管理",
+      "item": [
+        {
+          "name": "GET /api/v1/drones/missions · 分页获取无人机任务记录",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/missions?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "missions"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "droneId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('drone:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/drones/missions/{id}/end · 指令无人机返航 (UC04)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/missions/{{id}}/end",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "missions",
+                "{{id}}",
+                "end"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('drone:control')"
+          }
+        },
+        {
+          "name": "GET /api/v1/drones/missions/{id}/telemetry · 查看遥测轨迹历史 (F-17)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/missions/{{id}}/telemetry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "missions",
+                "{{id}}",
+                "telemetry"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('drone:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/drones/plans · 制定巡航计划 (UC08)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/plans",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "plans"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('drone:plan')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"planName\": \"\",\n  \"hangarId\": 0,\n  \"waterAreaId\": 0,\n  \"scheduleType\": \"\",\n  \"cronExpression\": \"\",\n  \"nextExecAt\": \"\",\n  \"flightAltitude\": 0,\n  \"flightSpeed\": 0,\n  \"status\": \"\",\n  \"createdBy\": 0,\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"hangarName\": \"\",\n  \"waterAreaName\": \"\",\n  \"waypoints\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/drones/plans/{id} · 查看巡航计划详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/plans/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "plans",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('drone:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/drones/takeoff · 调度无人机起飞 (UC04)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/takeoff?hangarId=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "takeoff"
+              ],
+              "query": [
+                {
+                  "key": "alertEventId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "hangarId",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('drone:control')"
+          }
+        },
+        {
+          "name": "POST /api/v1/drones/telemetry · 上报实时遥测信息 (无人机端点)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/drones/telemetry",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "drones",
+                "telemetry"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"missionId\": 0,\n  \"longitude\": 0,\n  \"latitude\": 0,\n  \"altitude\": 0,\n  \"speed\": 0,\n  \"batteryPct\": 0,\n  \"signalDbm\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "水域管理",
+      "item": [
+        {
+          "name": "GET /api/v1/water-areas · 分页查询水域列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('waterarea:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/water-areas · 创建新水域",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('waterarea:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"name\": \"\",\n  \"areaCode\": \"\",\n  \"level\": 0,\n  \"boundary\": \"\",\n  \"centerPoint\": \"\",\n  \"description\": \"\",\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"centerLng\": 0,\n  \"centerLat\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/water-areas/containing · 根据经纬度反查所在水域",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas/containing?lng=&lat=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas",
+                "containing"
+              ],
+              "query": [
+                {
+                  "key": "lng",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "lat",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('waterarea:read')"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/water-areas/{id} · 逻辑删除水域",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('waterarea:write')"
+          }
+        },
+        {
+          "name": "GET /api/v1/water-areas/{id} · 根据ID获取水域详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('waterarea:read')"
+          }
+        },
+        {
+          "name": "PUT /api/v1/water-areas/{id} · 修改水域",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/water-areas/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "water-areas",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('waterarea:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"name\": \"\",\n  \"areaCode\": \"\",\n  \"level\": 0,\n  \"boundary\": \"\",\n  \"centerPoint\": \"\",\n  \"description\": \"\",\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"centerLng\": 0,\n  \"centerLat\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "用户管理",
+      "item": [
+        {
+          "name": "GET /api/v1/users · 分页获取用户列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('user:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/users · 新增用户",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('user:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"username\": \"\",\n  \"password\": \"\",\n  \"guardId\": \"\",\n  \"realName\": \"\",\n  \"phone\": \"\",\n  \"avatarUrl\": \"\",\n  \"status\": 0,\n  \"dutyStatus\": 0,\n  \"lastLoginAt\": \"\",\n  \"passwordReset\": false,\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"lastWktLocation\": \"\",\n  \"roleCode\": \"\",\n  \"deviceIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/users/active-locations · 获取当前在岗/活跃救生员最新位置列表",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/active-locations",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "active-locations"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "PUT /api/v1/users/duty-status · 救生员上报在岗状态 (UC12)",
+          "request": {
+            "method": "PUT",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/duty-status?dutyStatus=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "duty-status"
+              ],
+              "query": [
+                {
+                  "key": "dutyStatus",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('task:update')"
+          }
+        },
+        {
+          "name": "POST /api/v1/users/notify · 预留救生员/人物通知推送接口 (预留接口)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/notify",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "notify"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"userId\": 0,\n  \"message\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "DELETE /api/v1/users/{id} · 逻辑删除用户",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAnyAuthority('user:delete', 'user:write', 'ROLE_ADMIN')"
+          }
+        },
+        {
+          "name": "PUT /api/v1/users/{id} · 修改用户基本信息",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('user:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"username\": \"\",\n  \"password\": \"\",\n  \"guardId\": \"\",\n  \"realName\": \"\",\n  \"phone\": \"\",\n  \"avatarUrl\": \"\",\n  \"status\": 0,\n  \"dutyStatus\": 0,\n  \"lastLoginAt\": \"\",\n  \"passwordReset\": false,\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"lastWktLocation\": \"\",\n  \"roleCode\": \"\",\n  \"deviceIds\": []\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/users/{id}/location · 后台模拟上报指定救生员的位置",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/users/{{id}}/location?lng=&lat=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "users",
+                "{{id}}",
+                "location"
+              ],
+              "query": [
+                {
+                  "key": "lng",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "lat",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "dutyStatus",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('user:write')"
+          }
+        }
+      ]
+    },
+    {
+      "name": "系统后台配置管理",
+      "item": [
+        {
+          "name": "GET /api/v1/admin/audit-logs · 查询日志审计记录 (UC21)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/audit-logs?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "audit-logs"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "module",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "username",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "result",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('audit:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/admin/audit-logs · 写入操作日志审计 (UC21)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/audit-logs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "audit-logs"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"userId\": 0,\n  \"username\": \"\",\n  \"module\": \"\",\n  \"action\": \"\",\n  \"targetId\": \"\",\n  \"detail\": \"\",\n  \"ipAddress\": \"\",\n  \"result\": \"\",\n  \"createdAt\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "GET /api/v1/admin/storage-configs · 获取存储配置策略 (UC22)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/storage-configs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "storage-configs"
+              ],
+              "query": [
+                {
+                  "key": "waterAreaId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('storage:config')"
+          }
+        },
+        {
+          "name": "POST /api/v1/admin/storage-configs · 设置存储清理策略 (UC22)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/admin/storage-configs",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "admin",
+                "storage-configs"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('storage:config')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"waterAreaId\": 0,\n  \"retentionDaysVideo\": 0,\n  \"retentionDaysSnapshot\": 0,\n  \"backupEnabled\": false,\n  \"backupTarget\": \"\",\n  \"backupCron\": \"\",\n  \"storageWarnThreshold\": 0,\n  \"updatedBy\": 0,\n  \"updatedAt\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "统计报表管理",
+      "item": [
+        {
+          "name": "GET /api/v1/statistics/overview · 全域安全态势指标总览 (今日实时大屏) (UC13)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/statistics/overview",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "statistics",
+                "overview"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('stats:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/statistics/trends · 历史报警/处置趋势分析 (UC15)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/statistics/trends",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "statistics",
+                "trends"
+              ],
+              "query": [
+                {
+                  "key": "days",
+                  "value": "7",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('stats:read')"
+          }
+        },
+        {
+          "name": "GET /api/v1/statistics/water-areas · 按水域统计报警频度分布",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/statistics/water-areas",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "statistics",
+                "water-areas"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('stats:read')"
+          }
+        }
+      ]
+    },
+    {
+      "name": "认证管理",
+      "item": [
+        {
+          "name": "GET /api/v1/auth/info · 获取当前登录用户信息",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/info",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "info"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "POST /api/v1/auth/login · 用户登录",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/login",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "login"
+              ],
+              "query": []
+            },
+            "description": "\n权限：公开，无需Bearer",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"{{username}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const r = pm.response.json(); if (r.code === 200 && r.data?.token) pm.collectionVariables.set(\"token\", r.data.token);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "POST /api/v1/auth/logout · 用户登出",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/logout",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "logout"
+              ],
+              "query": []
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "POST /api/v1/auth/register · 用户注册",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/auth/register",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "auth",
+                "register"
+              ],
+              "query": []
+            },
+            "description": "\n权限：公开，无需Bearer",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"username\": \"\",\n  \"password\": \"\",\n  \"guardId\": \"\",\n  \"realName\": \"\",\n  \"phone\": \"\",\n  \"roleCode\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "设备管理",
+      "item": [
+        {
+          "name": "GET /api/v1/devices · 分页获取设备列表 (UC18)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices?pageNum=1&pageSize=10",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices"
+              ],
+              "query": [
+                {
+                  "key": "pageNum",
+                  "value": "1",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "pageSize",
+                  "value": "10",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "keyword",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                },
+                {
+                  "key": "waterAreaId",
+                  "value": "",
+                  "disabled": true,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('device:read')"
+          }
+        },
+        {
+          "name": "POST /api/v1/devices · 设备注册 (UC18)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"deviceCode\": \"\",\n  \"deviceName\": \"\",\n  \"deviceType\": \"\",\n  \"manufacturer\": \"\",\n  \"model\": \"\",\n  \"ipAddress\": \"\",\n  \"port\": 0,\n  \"location\": \"\",\n  \"locationDesc\": \"\",\n  \"waterAreaId\": 0,\n  \"status\": \"\",\n  \"lastHeartbeat\": \"\",\n  \"extraConfig\": {},\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"longitude\": 0,\n  \"latitude\": 0,\n  \"waterAreaName\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/devices/heartbeat · 设备上报心跳/状态",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/heartbeat?deviceCode=&status=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "heartbeat"
+              ],
+              "query": [
+                {
+                  "key": "deviceCode",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "status",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：登录；未另设方法权限"
+          }
+        },
+        {
+          "name": "GET /api/v1/devices/nearest · 查询最近的特定类型设备 (联动推荐最近音柱等)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/nearest?lng=&lat=&type=",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "nearest"
+              ],
+              "query": [
+                {
+                  "key": "lng",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "lat",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                },
+                {
+                  "key": "type",
+                  "value": "",
+                  "disabled": false,
+                  "description": ""
+                }
+              ]
+            },
+            "description": "\n权限：hasAuthority('device:read')"
+          }
+        },
+        {
+          "name": "DELETE /api/v1/devices/{id} · 删除设备 (UC18)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:delete')"
+          }
+        },
+        {
+          "name": "GET /api/v1/devices/{id} · 获取设备详情",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:read')"
+          }
+        },
+        {
+          "name": "PUT /api/v1/devices/{id} · 修改设备 (UC18)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/{{id}}",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "{{id}}"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:write')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 0,\n  \"deviceCode\": \"\",\n  \"deviceName\": \"\",\n  \"deviceType\": \"\",\n  \"manufacturer\": \"\",\n  \"model\": \"\",\n  \"ipAddress\": \"\",\n  \"port\": 0,\n  \"location\": \"\",\n  \"locationDesc\": \"\",\n  \"waterAreaId\": 0,\n  \"status\": \"\",\n  \"lastHeartbeat\": \"\",\n  \"extraConfig\": {},\n  \"createdAt\": \"\",\n  \"updatedAt\": \"\",\n  \"deleted\": 0,\n  \"longitude\": 0,\n  \"latitude\": 0,\n  \"waterAreaName\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/devices/{id}/confidence · 针对摄像头设备动态微调识别精度/灵敏度阈值 (滑轨控制/热重载)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/{{id}}/confidence",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "{{id}}",
+                "confidence"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:control')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"confidence\": 0\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "POST /api/v1/devices/{id}/model · 针对摄像头设备动态切换AI算法模型 (热重载)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/api/v1/devices/{{id}}/model",
+              "host": [
+                "{{baseUrl}}"
+              ],
+              "path": [
+                "api",
+                "v1",
+                "devices",
+                "{{id}}",
+                "model"
+              ],
+              "query": []
+            },
+            "description": "\n权限：hasAuthority('device:control')",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"modelName\": \"\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}

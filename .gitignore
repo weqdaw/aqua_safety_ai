@@ -1,0 +1,31 @@
+# Build outputs and dependencies
+target/
+node_modules/
+dist/
+build/
+.npm-cache/
+coverage/
+
+# Local configuration and credentials
+.env
+.env.*
+!.env.example
+*.local.yml
+*.local.yaml
+application-local.yml
+application-local.yaml
+*.pem
+*.key
+*.jks
+*.keystore
+
+# Runtime files and editors
+*.db
+*.db-*
+*.sqlite*
+*.log
+.idea/
+.vscode/
+*.iml
+.DS_Store
+Thumbs.db
